@@ -1,1 +1,0 @@
-import{a as e,f as t,n,o as r,s as i,y as a}from"./dist-HCIgDmL0.js";var o=t(`<main><!$><!/><h1>About`);function s(){return(()=>{var t=e(o),s=t.firstChild,[c,l]=r(s.nextSibling);return c.nextSibling,i(t,a(n,{children:`About`}),c,l),t})()}export{s as default};

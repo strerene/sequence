@@ -14,26 +14,26 @@
       "_build/assets/Room-BRZMN2Fw.css"
     ]
   },
-  "_dist-HCIgDmL0.js": {
-    "file": "_build/assets/dist-HCIgDmL0.js",
+  "_dist-DHaUULty.js": {
+    "file": "_build/assets/dist-DHaUULty.js",
     "name": "dist"
   },
-  "_routing-Dj60NkfF.js": {
-    "file": "_build/assets/routing-Dj60NkfF.js",
+  "_routing-DQIkVGnu.js": {
+    "file": "_build/assets/routing-DQIkVGnu.js",
     "name": "routing",
     "imports": [
-      "_dist-HCIgDmL0.js"
+      "_dist-DHaUULty.js"
     ]
   },
   "src/entry-client.tsx": {
-    "file": "_build/assets/entry-client-BIxvp5l0.js",
+    "file": "_build/assets/entry-client-Bs66Drvw.js",
     "name": "entry-client",
     "src": "src/entry-client.tsx",
     "isEntry": true,
     "imports": [
-      "_dist-HCIgDmL0.js",
+      "_dist-DHaUULty.js",
       "_HttpStatusCode-C1QMaJF9.js",
-      "_routing-Dj60NkfF.js"
+      "_routing-DQIkVGnu.js"
     ],
     "dynamicImports": [
       "src/routes/[...404].tsx?pick=default&pick=$css&lang.tsx",
@@ -46,44 +46,44 @@
     ]
   },
   "src/routes/[...404].tsx?pick=default&pick=$css&lang.tsx": {
-    "file": "_build/assets/_...404_-C4OjVQ0E.js",
+    "file": "_build/assets/_...404_-DH80uOj2.js",
     "name": "_...404_",
     "src": "src/routes/[...404].tsx?pick=default&pick=$css&lang.tsx",
     "isEntry": true,
     "imports": [
-      "_dist-HCIgDmL0.js",
+      "_dist-DHaUULty.js",
       "_HttpStatusCode-C1QMaJF9.js"
     ]
   },
   "src/routes/about.tsx?pick=default&pick=$css&lang.tsx": {
-    "file": "_build/assets/about-B-wfnIQR.js",
+    "file": "_build/assets/about-D8AJKZuZ.js",
     "name": "about",
     "src": "src/routes/about.tsx?pick=default&pick=$css&lang.tsx",
     "isEntry": true,
     "imports": [
-      "_dist-HCIgDmL0.js"
+      "_dist-DHaUULty.js"
     ]
   },
   "src/routes/index.tsx?pick=default&pick=$css&lang.tsx": {
-    "file": "_build/assets/index-DBhptO9o.js",
+    "file": "_build/assets/index-RY_dkZp8.js",
     "name": "index",
     "src": "src/routes/index.tsx?pick=default&pick=$css&lang.tsx",
     "isEntry": true,
     "imports": [
       "_Room-DP1Wje1A.js",
-      "_dist-HCIgDmL0.js",
-      "_routing-Dj60NkfF.js"
+      "_dist-DHaUULty.js",
+      "_routing-DQIkVGnu.js"
     ]
   },
   "src/routes/sequence/[roomId].tsx?pick=default&pick=$css&lang.tsx": {
-    "file": "_build/assets/_roomId_-B-Ww15N5.js",
+    "file": "_build/assets/_roomId_-DfjYAYdn.js",
     "name": "_roomId_",
     "src": "src/routes/sequence/[roomId].tsx?pick=default&pick=$css&lang.tsx",
     "isEntry": true,
     "imports": [
       "_Room-DP1Wje1A.js",
-      "_dist-HCIgDmL0.js",
-      "_routing-Dj60NkfF.js"
+      "_dist-DHaUULty.js",
+      "_routing-DQIkVGnu.js"
     ],
     "css": [
       "_build/assets/_roomId_-B15FKSsX.css"
