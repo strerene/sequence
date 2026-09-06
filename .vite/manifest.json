@@ -1,0 +1,95 @@
+{
+  "_HttpStatusCode--nrLH_xM.js": {
+    "file": "_build/assets/HttpStatusCode--nrLH_xM.js",
+    "name": "HttpStatusCode",
+    "imports": [
+      "_dist-DZvREAqf.js"
+    ]
+  },
+  "_Room-BRZMN2Fw.css": {
+    "file": "_build/assets/Room-BRZMN2Fw.css",
+    "src": "_Room-BRZMN2Fw.css"
+  },
+  "_Room-DP1Wje1A.js": {
+    "file": "_build/assets/Room-DP1Wje1A.js",
+    "name": "Room",
+    "css": [
+      "_build/assets/Room-BRZMN2Fw.css"
+    ]
+  },
+  "_dist-DZvREAqf.js": {
+    "file": "_build/assets/dist-DZvREAqf.js",
+    "name": "dist"
+  },
+  "_routing-BVO5ur6G.js": {
+    "file": "_build/assets/routing-BVO5ur6G.js",
+    "name": "routing",
+    "imports": [
+      "_dist-DZvREAqf.js"
+    ]
+  },
+  "src/entry-client.tsx": {
+    "file": "_build/assets/entry-client-CmwPfKJB.js",
+    "name": "entry-client",
+    "src": "src/entry-client.tsx",
+    "isEntry": true,
+    "imports": [
+      "_dist-DZvREAqf.js",
+      "_routing-BVO5ur6G.js",
+      "_HttpStatusCode--nrLH_xM.js"
+    ],
+    "dynamicImports": [
+      "src/routes/[...404].tsx?pick=default&pick=$css&lang.tsx",
+      "src/routes/about.tsx?pick=default&pick=$css&lang.tsx",
+      "src/routes/index.tsx?pick=default&pick=$css&lang.tsx",
+      "src/routes/sequence/[roomId].tsx?pick=default&pick=$css&lang.tsx"
+    ],
+    "css": [
+      "_build/assets/entry-client-Chy68Y4K.css"
+    ]
+  },
+  "src/routes/[...404].tsx?pick=default&pick=$css&lang.tsx": {
+    "file": "_build/assets/_...404_-BK8GmtMa.js",
+    "name": "_...404_",
+    "src": "src/routes/[...404].tsx?pick=default&pick=$css&lang.tsx",
+    "isEntry": true,
+    "imports": [
+      "_dist-DZvREAqf.js",
+      "_HttpStatusCode--nrLH_xM.js"
+    ]
+  },
+  "src/routes/about.tsx?pick=default&pick=$css&lang.tsx": {
+    "file": "_build/assets/about-B__B9aSY.js",
+    "name": "about",
+    "src": "src/routes/about.tsx?pick=default&pick=$css&lang.tsx",
+    "isEntry": true,
+    "imports": [
+      "_dist-DZvREAqf.js"
+    ]
+  },
+  "src/routes/index.tsx?pick=default&pick=$css&lang.tsx": {
+    "file": "_build/assets/index-CNujit1k.js",
+    "name": "index",
+    "src": "src/routes/index.tsx?pick=default&pick=$css&lang.tsx",
+    "isEntry": true,
+    "imports": [
+      "_Room-DP1Wje1A.js",
+      "_dist-DZvREAqf.js",
+      "_routing-BVO5ur6G.js"
+    ]
+  },
+  "src/routes/sequence/[roomId].tsx?pick=default&pick=$css&lang.tsx": {
+    "file": "_build/assets/_roomId_-B99jBk1D.js",
+    "name": "_roomId_",
+    "src": "src/routes/sequence/[roomId].tsx?pick=default&pick=$css&lang.tsx",
+    "isEntry": true,
+    "imports": [
+      "_Room-DP1Wje1A.js",
+      "_dist-DZvREAqf.js",
+      "_routing-BVO5ur6G.js"
+    ],
+    "css": [
+      "_build/assets/_roomId_-B15FKSsX.css"
+    ]
+  }
+}
