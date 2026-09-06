@@ -125,10 +125,6 @@
   background: rgba(68, 107, 158, 0.2);
 }
 
-.seq-cell.last-move {
-  box-shadow: inset 0 0 0 2px #44769e;
-}
-
 @keyframes seq-flash {
   50% {
     background: rgba(255, 215, 0, 0.7);

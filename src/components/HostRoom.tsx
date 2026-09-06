@@ -1,5 +1,5 @@
 import type { DataConnection, Peer } from "peerjs";
-import { createEffect, createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import { batch, createEffect, createSignal, For, onCleanup, onMount, Show } from "solid-js";
 import SequenceGame from "~/components/SequenceGame";
 import {
   SEQUENCE_SEATS,
@@ -135,8 +135,11 @@ export default function HostRoom(props: { roomId: string; peer: Peer }) {
   /** Adopt a new state, bump hand reactivity, and sync all clients. */
   const publish = (next: SequenceState, announce = false) => {
     const final = settleDraws(next);
-    setGameState(final);
-    setHandVersion((v) => v + 1); // a committed action may have changed hands
+    // One batch: state + hand version apply in a single render pass.
+    batch(() => {
+      setGameState(final);
+      setHandVersion((v) => v + 1); // a committed action may have changed hands
+    });
     if (announce) broadcast({ type: "start" });
     broadcast({
       type: "state",

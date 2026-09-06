@@ -1,5 +1,5 @@
 import type { DataConnection } from "peerjs";
-import { createSignal, onCleanup, onMount, Show } from "solid-js";
+import { batch, createSignal, onCleanup, onMount, Show } from "solid-js";
 import SequenceGame from "~/components/SequenceGame";
 import {
   createInitialState,
@@ -47,8 +47,13 @@ export default function ClientRoom(props: { roomId: string }) {
         } else if (msg.type === "state") {
           // State + own hand arrive together, so a turn applies in one batch:
           // the hand never renders in its intermediate (one card short) form.
-          setGameState(msg.state);
-          setHand(msg.hand);
+          // PeerJS callbacks are not Solid event handlers, so the two writes
+          // must be batched explicitly — unbatched they cause two full render
+          // passes per turn.
+          batch(() => {
+            setGameState(msg.state);
+            setHand(msg.hand);
+          });
         }
       });
     } catch (err) {
