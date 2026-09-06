@@ -1,0 +1,247 @@
+.seq {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* --- Header ------------------------------------------------------------------ */
+
+.seq-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.5em 1em;
+  background: rgba(68, 107, 158, 0.06);
+  border-radius: 0.5em;
+  text-align: left;
+}
+
+.seq-room {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.seq-players {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.seq-player {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.seq-player.offline {
+  opacity: 0.55;
+}
+
+.seq-player-status {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.seq-dot {
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.seq-dot.blue {
+  background: #2b5f9e;
+}
+
+.seq-dot.green {
+  background: #3d8b4f;
+}
+
+.seq-status {
+  font-weight: 600;
+  min-height: 1.4em;
+}
+
+/* --- Board --------------------------------------------------------------------- */
+
+.seq-board {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(28px, 44px));
+  grid-auto-rows: minmax(28px, 44px);
+  gap: 2px;
+  padding: 6px;
+  background: rgba(68, 107, 158, 0.08);
+  border-radius: 0.5em;
+  user-select: none;
+}
+
+.seq-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.5rem, 1.4vw, 0.75rem);
+  border-radius: 4px;
+  background: #fffdf7;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.seq-cell.red {
+  color: #b3403a;
+}
+
+.seq-cell.black {
+  color: #222;
+}
+
+.seq-cell.free {
+  background: rgba(68, 107, 158, 0.15);
+}
+
+.seq-free-glyph {
+  opacity: 0.6;
+}
+
+.seq-cell.legal {
+  outline: 2px solid #44769e;
+  outline-offset: -2px;
+  cursor: pointer;
+}
+
+.seq-cell.interactive {
+  cursor: pointer;
+}
+
+.seq-cell.interactive:hover {
+  background: rgba(68, 107, 158, 0.2);
+}
+
+.seq-cell.last-move {
+  box-shadow: inset 0 0 0 2px #44769e;
+}
+
+@keyframes seq-flash {
+  50% {
+    background: rgba(255, 215, 0, 0.7);
+  }
+}
+
+.seq-cell.flash {
+  animation: seq-flash 0.7s ease-in-out 3;
+}
+
+.seq-chip {
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.seq-chip.blue {
+  background: #2b5f9e;
+}
+
+.seq-chip.green {
+  background: #3d8b4f;
+}
+
+.seq-chip.locked {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 2px rgba(255, 215, 0, 0.9);
+}
+
+/* --- Hand ---------------------------------------------------------------------- */
+
+.seq-hand-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.seq-hand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.seq-hand-card {
+  position: relative;
+  width: 3.2rem;
+  height: 4.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  font-family: inherit;
+  font-size: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.4em;
+  background: #fffdf7;
+  cursor: pointer;
+}
+
+.seq-hand-card.red {
+  color: #b3403a;
+}
+
+.seq-hand-card.black {
+  color: #222;
+}
+
+.seq-hand-card:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.seq-hand-card.playable:not(:disabled):hover {
+  border-color: #44769e;
+}
+
+.seq-hand-card.selected {
+  outline: 2px solid #44769e;
+  transform: translateY(-4px);
+}
+
+.seq-hand-card.dead {
+  opacity: 0.5;
+}
+
+.seq-dead-tag {
+  position: absolute;
+  top: -0.5em;
+  right: -0.4em;
+  font-size: 0.6rem;
+  padding: 0.1em 0.4em;
+  border-radius: 1em;
+  background: #b3403a;
+  color: #fff;
+}
+
+.seq-button {
+  font-family: inherit;
+  padding: 0.35em 1em;
+  color: #335d92;
+  background-color: rgba(68, 107, 158, 0.1);
+  border: none;
+  border-radius: 2em;
+  cursor: pointer;
+}
+
+.seq-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
