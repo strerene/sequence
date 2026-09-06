@@ -18,7 +18,6 @@ function CellView(props: {
   cell: BoardCell;
   index: number;
   legal: boolean;
-  lastMove: boolean;
   flash: boolean;
   interactive: boolean;
   onCellClick: (index: number) => void;
@@ -35,7 +34,6 @@ function CellView(props: {
       class={`seq-cell ${props.cell.card === "FREE" ? "free" : SUIT_RED[props.cell.card.suit] ? "red" : "black"}`}
       classList={{
         legal: props.legal,
-        "last-move": props.lastMove,
         flash: props.flash,
         interactive: props.interactive,
       }}
@@ -131,7 +129,6 @@ export default function SequenceGame(props: {
 }) {
   const s = () => props.state;
   const [selected, setSelected] = createSignal<number | null>(null);
-  const [lastMove, setLastMove] = createSignal<ReadonlySet<number>>(new Set());
   const [flash, setFlash] = createSignal<ReadonlySet<number>>(new Set());
   let flashTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -156,28 +153,6 @@ export default function SequenceGame(props: {
       (step) => {
         if (step === "play") setSelected(null);
       },
-    ),
-  );
-
-  // Last-move highlight: cells whose chip changed since the previous state.
-  createEffect(
-    on(
-      () => s().board,
-      (board, prev) => {
-        if (!prev) return;
-        const changed = new Set<number>();
-        board.forEach((cell, i) => {
-          const p = prev[i];
-          if (
-            (cell.chip?.color ?? null) !== (p.chip?.color ?? null) ||
-            (cell.chip?.locked ?? false) !== (p.chip?.locked ?? false)
-          ) {
-            changed.add(i);
-          }
-        });
-        setLastMove(changed);
-      },
-      { defer: true },
     ),
   );
 
@@ -341,7 +316,6 @@ export default function SequenceGame(props: {
               cell={cell}
               index={i()}
               legal={highlightCells().has(i())}
-              lastMove={lastMove().has(i())}
               flash={flash().has(i())}
               interactive={myTurn() && highlightCells().has(i())}
               onCellClick={cellClick}
