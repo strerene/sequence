@@ -4,17 +4,18 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "deploy": "vite build; test -f .output/public/index.html || { echo 'static build failed: .output/public/index.html missing'; exit 1; }; cp .output/public/index.html .output/public/404.html; touch .output/public/.nojekyll",
+    "gh-pages:build": "BASE_PATH=/sequence/ vite build && test -f .output/public/index.html && cp .output/public/index.html .output/public/404.html && touch .output/public/.nojekyll",
+    "gh-pages:deploy": "bun run gh-pages:build && bunx gh-pages -d .output/public --dotfiles",
     "start": "node .output/server/index.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^1.0.0",
-    "@solidjs/start": "^2.0.0",
-    "nitro": "^3.0.260903-beta",
+    "@solidjs/start": "2.0.3",
+    "nitro": "3.0.260903-beta",
     "peerjs": "^1.5.5",
-    "solid-js": "^1.9.14",
+    "solid-js": "1.9.15",
     "vite": "^8.0.0"
   },
   "engines": {

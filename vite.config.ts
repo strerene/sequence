@@ -11,10 +11,11 @@ export default defineConfig({
     solidStart(),
     // Pass Nitro v3 settings directly into the plugin initialization call
     nitro({
+      baseURL: basePath,
       preset: "static",
       prerender: {
         crawlLinks: true,
-        routes: ["/", "/sequence"]
+        routes: ["/", "/about"]
       }
     })
   ],
