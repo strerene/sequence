@@ -98,32 +98,30 @@ export default function ClientRoom(props: { roomId: string }) {
     <Show
       when={gameState().phase === "lobby"}
       fallback={
-        <div class="card bg-base-100 shadow-xl w-full max-w-2xl">
-          <div class="card-body items-center gap-4">
-            <SequenceGame
-              roomId={props.roomId}
-              state={gameState()}
-              seat="green"
-              players={[
-                {
-                  seat: "blue",
-                  name: gameState().players.blue?.name ?? "Host",
-                  color: "blue",
-                  connected: status() === "connected",
-                  you: false,
-                },
-                {
-                  seat: "green",
-                  name: gameState().players.green?.name ?? "Guest",
-                  color: "green",
-                  connected: true,
-                  you: true,
-                },
-              ]}
-              hand={hand()}
-              onPropose={propose}
-            />
-          </div>
+        <div class="flex min-h-[calc(100dvh-2rem)] w-full flex-col items-center gap-4">
+          <SequenceGame
+            roomId={props.roomId}
+            state={gameState()}
+            seat="green"
+            players={[
+              {
+                seat: "blue",
+                name: gameState().players.blue?.name ?? "Host",
+                color: "blue",
+                connected: status() === "connected",
+                you: false,
+              },
+              {
+                seat: "green",
+                name: gameState().players.green?.name ?? "Guest",
+                color: "green",
+                connected: true,
+                you: true,
+              },
+            ]}
+            hand={hand()}
+            onPropose={propose}
+          />
         </div>
       }
     >
