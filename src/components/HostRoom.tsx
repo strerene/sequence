@@ -204,39 +204,37 @@ export default function HostRoom(props: { roomId: string; peer: Peer }) {
     <Show
       when={gameState().phase === "lobby"}
       fallback={
-        <div class="card bg-base-100 shadow-xl w-full max-w-2xl">
-          <div class="card-body items-center gap-4">
-            <SequenceGame
-              roomId={props.roomId}
-              state={gameState()}
-              seat="blue"
-              players={[
-                {
-                  seat: "blue",
-                  name: gameState().players.blue?.name ?? "Host",
-                  color: "blue",
-                  connected: true,
-                  you: true,
-                },
-                {
-                  seat: "green",
-                  name: gameState().players.green?.name ?? "Guest",
-                  color: "green",
-                  connected: conns().length > 0,
-                  you: false,
-                },
-              ]}
-              hand={myHand()}
-              onPropose={(type, payload) =>
-                applyAction("blue", { type, payload })
-              }
-            />
-            <Show when={gameState().status}>
-              <button class="btn btn-primary" onClick={startGame} type="button">
-                Rematch
-              </button>
-            </Show>
-          </div>
+        <div class="flex min-h-[calc(100dvh-2rem)] w-full flex-col items-center gap-4">
+          <SequenceGame
+            roomId={props.roomId}
+            state={gameState()}
+            seat="blue"
+            players={[
+              {
+                seat: "blue",
+                name: gameState().players.blue?.name ?? "Host",
+                color: "blue",
+                connected: true,
+                you: true,
+              },
+              {
+                seat: "green",
+                name: gameState().players.green?.name ?? "Guest",
+                color: "green",
+                connected: conns().length > 0,
+                you: false,
+              },
+            ]}
+            hand={myHand()}
+            onPropose={(type, payload) =>
+              applyAction("blue", { type, payload })
+            }
+          />
+          <Show when={gameState().status}>
+            <button class="btn btn-primary" onClick={startGame} type="button">
+              Rematch
+            </button>
+          </Show>
         </div>
       }
     >

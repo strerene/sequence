@@ -142,6 +142,9 @@ export default function SequenceGame(props: {
   const canExchangeDead = () => inPlayStep() && !s().deadCardExchanged;
 
   const name = (seat: string) => s().players[seat]?.name ?? seat;
+  const currentPlayer = () => s().players[s().currentPlayerId];
+  const turnColor = () =>
+    currentPlayer()?.color ?? (s().currentPlayerId === "blue" ? "blue" : "green");
   const winnerName = () => {
     const w = s().status?.winner;
     return w ? name(w) : undefined;
@@ -279,17 +282,8 @@ export default function SequenceGame(props: {
 
   return (
     <div class="seq">
-      {/* --- Header: room + players --- */}
+      {/* --- Header: players left, room badge right (like the lobby) --- */}
       <header class="seq-header">
-        <div class="seq-room flex flex-col gap-1">
-          <span class="room-code-label">Room</span>
-          <input
-            class="input input-xs w-full font-mono"
-            readOnly
-            type="text"
-            value={props.roomId}
-          />
-        </div>
         <div class="seq-players">
           <For each={props.players}>
             {(player) => (
@@ -304,15 +298,8 @@ export default function SequenceGame(props: {
             )}
           </For>
         </div>
+        <span class="badge badge-warning badge-sm font-mono">{props.roomId}</span>
       </header>
-
-      <div class="seq-status">
-        <Show when={s().status} fallback={<span>{prompt()}</span>}>
-          <Show when={!s().status?.draw} fallback="Board full — draw!">
-            {winnerName() === props.seat ? "You win!" : `${winnerName()} wins!`}
-          </Show>
-        </Show>
-      </div>
 
       {/* --- Board --- */}
       <div class="seq-board" role="grid" aria-label="Sequence board">
@@ -330,8 +317,25 @@ export default function SequenceGame(props: {
         </For>
       </div>
 
-      {/* --- Hand --- */}
+      {/* --- Hand + turn info (secondary area) --- */}
       <div class="seq-hand-area">
+        <div class="seq-status">
+          <Show
+            when={s().status}
+            fallback={
+              <div class="seq-turn">
+                <span class="seq-turn-label">Current turn:</span>
+                <TeamAvatar color={turnColor()} label={name(s().currentPlayerId).charAt(0)} />
+                <span>{name(s().currentPlayerId)}</span>
+                <span class="seq-turn-hint">{prompt()}</span>
+              </div>
+            }
+          >
+            <Show when={!s().status?.draw} fallback="Board full — draw!">
+              {winnerName() === props.seat ? "You win!" : `${winnerName()} wins!`}
+            </Show>
+          </Show>
+        </div>
         <div class="seq-hand">
           <For each={props.hand}>
             {(card, i) => (
