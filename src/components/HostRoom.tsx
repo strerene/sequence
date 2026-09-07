@@ -1,6 +1,15 @@
 import type { DataConnection, Peer } from "peerjs";
-import { batch, createEffect, createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import {
+  batch,
+  createEffect,
+  createSignal,
+  For,
+  onCleanup,
+  onMount,
+  Show,
+} from "solid-js";
 import SequenceGame from "~/components/SequenceGame";
+import TeamAvatar from "~/components/ui/TeamAvatar";
 import {
   SEQUENCE_SEATS,
   SequenceSecrets,
@@ -12,14 +21,15 @@ import {
   type SequenceState,
   type SerializedSecrets,
 } from "~/lib/sequence";
-import "./Room.css";
 
 const gameKey = (roomId: string) => `game:${roomId}`;
 
 export default function HostRoom(props: { roomId: string; peer: Peer }) {
   const [conns, setConns] = createSignal<DataConnection[]>([]);
   const [copied, setCopied] = createSignal(false);
-  const [gameState, setGameState] = createSignal<SequenceState>(createInitialState());
+  const [copiedLink, setCopiedLink] = createSignal(false);
+  const [gameState, setGameState] =
+    createSignal<SequenceState>(createInitialState());
   // secrets is a mutable host-side class (not a signal), so a version counter
   // tracks hand changes for reactivity.
   const [handVersion, setHandVersion] = createSignal(0);
@@ -94,8 +104,16 @@ export default function HostRoom(props: { roomId: string; peer: Peer }) {
    * information (secrets), applies the pure reducer, then publishes the new
    * public state and the affected player's hand.
    */
-  const applyAction = (seat: string, action: { type: string; payload?: unknown }) => {
-    const prepared = secrets.prepareProposal(gameState(), seat, action.type, action.payload);
+  const applyAction = (
+    seat: string,
+    action: { type: string; payload?: unknown },
+  ) => {
+    const prepared = secrets.prepareProposal(
+      gameState(),
+      seat,
+      action.type,
+      action.payload,
+    );
     if (prepared === null) return;
     const next = reducer(gameState(), {
       type: action.type as GameAction["type"],
@@ -113,11 +131,7 @@ export default function HostRoom(props: { roomId: string; peer: Peer }) {
    */
   const settleDraws = (state: SequenceState): SequenceState => {
     let cur = state;
-    while (
-      cur.phase === "playing" &&
-      !cur.status &&
-      cur.turnStep === "draw"
-    ) {
+    while (cur.phase === "playing" && !cur.status && cur.turnStep === "draw") {
       const seat = cur.currentPlayerId;
       const prepared = secrets.prepareProposal(cur, seat, "DRAW_CARD", {});
       if (prepared === null) break;
@@ -177,57 +191,89 @@ export default function HostRoom(props: { roomId: string; peer: Peer }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Build the invite link from the current URL so a BASE_PATH deployment
+  // (e.g. GitHub Pages) is handled automatically.
+  const copyRoomLink = async () => {
+    const link = `${window.location.origin}${window.location.pathname}?id=${encodeURIComponent(props.roomId)}`;
+    await navigator.clipboard.writeText(link);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
+  };
+
   return (
-    <section class="room room--wide">
-      <Show when={gameState().phase === "lobby"}>
-        <div class="room-code-row">
-          <span class="room-code-label">Room code:</span>
-          <code class="room-code">{props.roomId}</code>
-          <button class="room-copy" onClick={copyRoomId} type="button">
-            {copied() ? "Copied!" : "Copy"}
-          </button>
+    <Show
+      when={gameState().phase === "lobby"}
+      fallback={
+        <div class="card bg-base-100 shadow-xl w-full max-w-2xl">
+          <div class="card-body items-center gap-4">
+            <SequenceGame
+              roomId={props.roomId}
+              state={gameState()}
+              seat="blue"
+              players={[
+                {
+                  seat: "blue",
+                  name: gameState().players.blue?.name ?? "Host",
+                  color: "blue",
+                  connected: true,
+                  you: true,
+                },
+                {
+                  seat: "green",
+                  name: gameState().players.green?.name ?? "Guest",
+                  color: "green",
+                  connected: conns().length > 0,
+                  you: false,
+                },
+              ]}
+              hand={myHand()}
+              onPropose={(type, payload) =>
+                applyAction("blue", { type, payload })
+              }
+            />
+            <Show when={gameState().status}>
+              <button class="btn btn-primary" onClick={startGame} type="button">
+                Rematch
+              </button>
+            </Show>
+          </div>
         </div>
-        <h3>Players ({conns().length})</h3>
-        <ul class="room-players">
-          <li class="room-player room-player--host">You (host)</li>
-          <For each={conns()}>
-            {(conn) => <li class="room-player">{conn.peer}</li>}
-          </For>
-        </ul>
-        <button onClick={startGame} disabled={conns().length === 0} type="button">
-          {conns().length === 0 ? "Waiting for players…" : "Start game"}
-        </button>
-      </Show>
-      <Show when={gameState().phase !== "lobby"}>
-        <SequenceGame
-          roomId={props.roomId}
-          state={gameState()}
-          seat="blue"
-          players={[
-            {
-              seat: "blue",
-              name: gameState().players.blue?.name ?? "Host",
-              color: "blue",
-              connected: true,
-              you: true,
-            },
-            {
-              seat: "green",
-              name: gameState().players.green?.name ?? "Guest",
-              color: "green",
-              connected: conns().length > 0,
-              you: false,
-            },
-          ]}
-          hand={myHand()}
-          onPropose={(type, payload) => applyAction("blue", { type, payload })}
-        />
-        <Show when={gameState().status}>
-          <button class="room-copy" onClick={startGame} type="button">
-            Rematch
-          </button>
-        </Show>
-      </Show>
-    </section>
+      }
+    >
+      <section class="card bg-base-100 shadow-xl w-full max-w-2xl">
+        <div class="card-body">
+          <div class="flex justify-between items-center">
+            <h2 class="text-3xl font-bold">Game Lobby</h2>
+            <span class="badge badge-xs badge-warning">{props.roomId}</span>
+          </div>
+          <h3 class="card-title mt-6">Players ({conns().length + 1})</h3>
+          <ul class="space-y-2 text-sm mt-1.5">
+            <li class="flex items-center gap-2">
+              <TeamAvatar color="blue" label="B" /> You (host)
+            </li>
+            <For each={conns()}>
+              {(conn) => (
+                <li class="flex items-center gap-2">
+                  <TeamAvatar color="green" label="G" /> Guest
+                </li>
+              )}
+            </For>
+          </ul>
+          <div class="card-actions justify-end">
+            <button class="btn" onClick={copyRoomLink} type="button">
+              {copiedLink() ? "Copied!" : "Copy link"}
+            </button>
+            <button
+              class="btn btn-primary"
+              disabled={conns().length === 0}
+              onClick={startGame}
+              type="button"
+            >
+              {conns().length === 0 ? "Waiting for players…" : "Start game"}
+            </button>
+          </div>
+        </div>
+      </section>
+    </Show>
   );
 }

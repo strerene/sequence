@@ -12,6 +12,7 @@ tab **joins** as a client.
 | ---------- | -------------------------------------------------- |
 | UI         | SolidJS 1.9 (`solid-js`, `@solidjs/router`, `@solidjs/meta`) |
 | Framework  | `@solidjs/start` (file-based routing, SSR)         |
+| Styling    | Tailwind CSS 4 (`@tailwindcss/vite`) + daisyUI 5 (loaded as `@plugin` in `src/app.css`) |
 | Bundler    | Vite 8 + `nitro/vite` (static preset, prerendered) |
 | Networking | `peerjs` — WebRTC data channels with a public signaling server (configurable via `VITE_PEER_*` env vars) |
 | Runtime    | Node ≥ 24, Bun for scripts/deploy                  |
@@ -21,6 +22,7 @@ tab **joins** as a client.
 ```
 src/
 ├── app.tsx                  # Router + MetaProvider shell
+├── app.css                  # Tailwind + daisyUI entry (@import / @plugin)
 ├── entry-client.tsx         # Client entry
 ├── entry-server.tsx         # SSR entry
 ├── routes/

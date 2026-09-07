@@ -62,6 +62,14 @@ link in a second tab/window).
 ## Conventions
 
 - TypeScript, ESM, SolidJS signals (no external state library).
+- **Styling: Tailwind CSS v4 + daisyUI 5.** Tailwind v4 is configured in CSS
+  (`src/app.css`: `@import "tailwindcss";` + `@plugin "daisyui";`), not via a
+  `tailwind.config.js`. Use Tailwind utilities and daisyUI classes (`btn`,
+  `card`, `modal`, …) for UI; prefer daisyUI components over hand-rolled CSS.
+  Reusable generic primitives go in `src/components/ui/` (presentation only —
+  no game logic, no p2p imports); game-specific components stay in
+  `src/components/`. Don't migrate working per-component CSS files
+  (`Room.css`, `SequenceGame.css`) unless a component is being reworked.
 - Comments in this codebase explain *why* around the hidden-information
   architecture — keep that style; these invariants are easy to break silently.
 - Engine code (`src/lib/sequence/`) must remain independent of Solid/DOM so it

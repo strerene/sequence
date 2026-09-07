@@ -1,6 +1,7 @@
 import { For, Show, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js";
 import type { BoardCell, Card, ChipColor, SequenceState } from "~/lib/sequence";
 import { cardToString, cardCellIndices, isDeadCard, isOneEyedJack, isTwoEyedJack } from "~/lib/sequence";
+import TeamAvatar from "~/components/ui/TeamAvatar";
 import "./SequenceGame.css";
 
 const SUIT_GLYPH: Record<Card["suit"], string> = { S: "♠", H: "♥", D: "♦", C: "♣" };
@@ -280,15 +281,20 @@ export default function SequenceGame(props: {
     <div class="seq">
       {/* --- Header: room + players --- */}
       <header class="seq-header">
-        <div class="seq-room">
+        <div class="seq-room flex flex-col gap-1">
           <span class="room-code-label">Room</span>
-          <code class="room-code">{props.roomId}</code>
+          <input
+            class="input input-xs w-full font-mono"
+            readOnly
+            type="text"
+            value={props.roomId}
+          />
         </div>
         <div class="seq-players">
           <For each={props.players}>
             {(player) => (
               <span class="seq-player" classList={{ offline: !player.connected }}>
-                <span class={`seq-dot ${player.color}`} />
+                <TeamAvatar color={player.color} label={player.name.charAt(0)} />
                 {player.name}
                 <Show when={player.you}> (you)</Show>
                 <span class="seq-player-status">
