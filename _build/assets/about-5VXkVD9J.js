@@ -1,0 +1,1 @@
+import{S as e,a as t,c as n,n as r,o as i,p as a}from"./dist-CPFm6M_t.js";var o=a(`<main><!$><!/><h1>About`);function s(){return(()=>{var a=t(o),s=a.firstChild,[c,l]=i(s.nextSibling);return c.nextSibling,n(a,e(r,{children:`About`}),c,l),a})()}export{s as default};
