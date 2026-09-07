@@ -22,7 +22,7 @@
     ]
   },
   "src/entry-client.tsx": {
-    "file": "_build/assets/entry-client-L4hieERp.js",
+    "file": "_build/assets/entry-client-DmUKdXQi.js",
     "name": "entry-client",
     "src": "src/entry-client.tsx",
     "isEntry": true,
@@ -72,7 +72,7 @@
     ]
   },
   "src/routes/room/index.tsx?pick=default&pick=$css&lang.tsx": {
-    "file": "_build/assets/index-CmpvoDLi.js",
+    "file": "_build/assets/index-E_UzrhdR.js",
     "name": "index",
     "src": "src/routes/room/index.tsx?pick=default&pick=$css&lang.tsx",
     "isEntry": true,
@@ -82,7 +82,7 @@
       "_routing-ggleCAkg.js"
     ],
     "css": [
-      "_build/assets/index-CFxmcinG.css"
+      "_build/assets/index-3EoQbjop.css"
     ]
   }
 }
