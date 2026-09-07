@@ -1,6 +1,7 @@
 import type { DataConnection } from "peerjs";
 import { batch, createSignal, onCleanup, onMount, Show } from "solid-js";
 import SequenceGame from "~/components/SequenceGame";
+import TeamAvatar from "~/components/ui/TeamAvatar";
 import {
   createInitialState,
   type Card,
@@ -9,7 +10,6 @@ import {
   type SequenceState,
 } from "~/lib/sequence";
 import { joinRoom } from "~/lib/p2p";
-import "./Room.css";
 
 const MAX_RETRIES = 5;
 const RETRY_DELAY_MS = 2000;
@@ -91,30 +91,15 @@ export default function ClientRoom(props: { roomId: string }) {
     connection?.send({ type: "action", action: { type, payload } } satisfies ClientMessage);
   };
 
+  // Two-phase layout mirrors HostRoom: a lobby card while waiting for the
+  // host to start, then the game card. Connection status surfaces inside the
+  // lobby card since the client has nothing else to show before the game.
   return (
-    <section class="room room--wide">
-      <Show when={gameState().phase === "lobby"}>
-        <div class="room-code-row">
-          <span class="room-code-label">Room code:</span>
-          <code class="room-code">{props.roomId}</code>
-        </div>
-      </Show>
-      <Show when={!error()} fallback={<p class="room-error">{error()}</p>}>
-        <Show
-          when={status() === "connected"}
-          fallback={
-            <Show
-              when={status() === "connecting"}
-              fallback={<p class="room-error">Disconnected from host.</p>}
-            >
-              <p class="room-loading">Connecting to host…</p>
-            </Show>
-          }
-        >
-          <Show
-            when={gameState().phase !== "lobby"}
-            fallback={<p class="room-loading">Waiting for host to start…</p>}
-          >
+    <Show
+      when={gameState().phase === "lobby"}
+      fallback={
+        <div class="card bg-base-100 shadow-xl w-full max-w-2xl">
+          <div class="card-body items-center gap-4">
             <SequenceGame
               roomId={props.roomId}
               state={gameState()}
@@ -138,9 +123,63 @@ export default function ClientRoom(props: { roomId: string }) {
               hand={hand()}
               onPropose={propose}
             />
-          </Show>
-        </Show>
-      </Show>
-    </section>
+          </div>
+        </div>
+      }
+    >
+      <section class="card bg-base-100 shadow-xl w-full max-w-2xl">
+        <div class="card-body">
+          <div class="flex justify-between items-center">
+            <h2 class="text-3xl font-bold">Game Lobby</h2>
+            <span class="badge badge-xs badge-warning">{props.roomId}</span>
+          </div>
+          {/* Two-player only: the client tab is itself a player, so the
+              count is 2 once connected to the host. */}
+          <h3 class="card-title mt-6">
+            Players ({status() === "connected" ? 2 : 1})
+          </h3>
+          <ul class="space-y-2 text-sm mt-1.5">
+            <li class="flex items-center gap-2">
+              <TeamAvatar color="blue" label="B" /> Host
+            </li>
+            <li class="flex items-center gap-2">
+              <TeamAvatar color="green" label="G" /> You (guest)
+            </li>
+          </ul>
+          <div class="flex justify-end mt-6">
+            <Show
+              when={!error()}
+              fallback={
+                <div class="alert alert-error w-fit">
+                  <span>{error()}</span>
+                </div>
+              }
+            >
+              <Show
+                when={status() === "connected"}
+                fallback={
+                  <Show
+                    when={status() === "connecting"}
+                    fallback={
+                      <div class="alert alert-error w-fit">
+                        <span>Disconnected from host.</span>
+                      </div>
+                    }
+                  >
+                    <div class="flex items-center gap-2">
+                      <span class="loading loading-spinner" /> Connecting to host…
+                    </div>
+                  </Show>
+                }
+              >
+                <div class="flex items-center gap-2">
+                  <span class="loading loading-spinner" /> Waiting for host to start…
+                </div>
+              </Show>
+            </Show>
+          </div>
+        </div>
+      </section>
+    </Show>
   );
 }

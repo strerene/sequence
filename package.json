@@ -21,5 +21,9 @@
   "engines": {
     "node": ">=24"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "daisyui": "^5.7.28",
+    "tailwindcss": "^4.3.3"
+  }
 }

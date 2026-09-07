@@ -8,7 +8,7 @@ export default createHandler(() => (
         <head>
           <meta charset="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href={`${import.meta.env.BASE_URL}/favicon.ico`} />
+          <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
           {/* FOUC guard: hide the page until stylesheets finish loading. The
               animation auto-reveals after 1s so the page never stays hidden
               if JS is blocked or slow. */}
