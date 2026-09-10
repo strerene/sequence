@@ -1,0 +1,1 @@
+import{C as e,l as t,m as n,n as r,o as i,s as a}from"./dist-Cg9QWSCe.js";var o=n(`<main><!$><!/><h1>About`);function s(){return(()=>{var n=i(o),s=n.firstChild,[c,l]=a(s.nextSibling);return c.nextSibling,t(n,e(r,{children:`About`}),c,l),n})()}export{s as default};
