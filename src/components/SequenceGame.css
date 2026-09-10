@@ -198,8 +198,33 @@
     }
 }
 
-.seq-cell.flash {
+.seq-cell.sequence-flash {
     animation: seq-flash 0.7s ease-in-out 3;
+}
+
+/* One-shot hint for the opponent's last move: a short pulse of the chip
+   (or the cell itself when a chip was just removed). Kept on the chip so it
+   can run alongside the sequence flash on the same cell. */
+@keyframes seq-last-move-chip {
+    50% {
+        box-shadow:
+            0 0 0 4px rgba(255, 215, 0, 0.8),
+            0 1px 2px rgba(0, 0, 0, 0.35);
+    }
+}
+
+@keyframes seq-last-move-cell {
+    50% {
+        background: rgba(255, 215, 0, 0.45);
+    }
+}
+
+.seq-cell.last-move .seq-chip {
+    animation: seq-last-move-chip 0.8s ease-in-out 1;
+}
+
+.seq-cell.last-move:not(:has(.seq-chip)) {
+    animation: seq-last-move-cell 0.8s ease-in-out 1;
 }
 
 .seq-chip {

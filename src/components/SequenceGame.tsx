@@ -19,7 +19,8 @@ function CellView(props: {
   cell: BoardCell;
   index: number;
   legal: boolean;
-  flash: boolean;
+  sequenceFlash: boolean;
+  lastMoveFlash: boolean;
   interactive: boolean;
   onCellClick: (index: number) => void;
 }) {
@@ -35,7 +36,8 @@ function CellView(props: {
       class={`seq-cell ${props.cell.card === "FREE" ? "free" : SUIT_RED[props.cell.card.suit] ? "red" : "black"}`}
       classList={{
         legal: props.legal,
-        flash: props.flash,
+        "sequence-flash": props.sequenceFlash,
+        "last-move": props.lastMoveFlash,
         interactive: props.interactive,
       }}
       role={props.interactive ? "button" : undefined}
@@ -130,8 +132,10 @@ export default function SequenceGame(props: {
 }) {
   const s = () => props.state;
   const [selected, setSelected] = createSignal<number | null>(null);
-  const [flash, setFlash] = createSignal<ReadonlySet<number>>(new Set());
+  const [sequenceFlash, setSequenceFlash] = createSignal<ReadonlySet<number>>(new Set());
+  const [lastMoveFlash, setLastMoveFlash] = createSignal<number | null>(null);
   let flashTimer: ReturnType<typeof setTimeout> | undefined;
+  let lastMoveTimer: ReturnType<typeof setTimeout> | undefined;
 
   const myColor = createMemo<ChipColor>(
     () => s().players[props.seat]?.color ?? (props.seat === "blue" ? "blue" : "green"),
@@ -170,14 +174,49 @@ export default function SequenceGame(props: {
         for (let i = prev; i < count; i++) {
           for (const c of s().sequences[i].cells) cells.add(c);
         }
-        setFlash(cells);
+        setSequenceFlash(cells);
         clearTimeout(flashTimer);
-        flashTimer = setTimeout(() => setFlash(new Set<number>()), 2500);
+        flashTimer = setTimeout(() => setSequenceFlash(new Set<number>()), 2500);
       },
       { defer: true },
     ),
   );
-  onCleanup(() => clearTimeout(flashTimer));
+  onCleanup(() => {
+    clearTimeout(flashTimer);
+    clearTimeout(lastMoveTimer);
+  });
+
+  // Briefly highlight the cell of the most recent chip placement/removal so
+  // the opponent gets a visual hint of where the last move happened. Inferred
+  // by diffing the board (same UI-side pattern as the sequence flash): each
+  // chip action changes exactly one cell, so a single-cell diff IS the last
+  // move. Anything else (rematch reset, restored state, multi-cell change)
+  // is ignored rather than guessed at.
+  // Chips are compared by VALUE, not reference: on clients each received
+  // state is freshly deserialized, so unchanged cells get new chip objects
+  // and a reference diff would see the whole board as changed.
+  const chipChanged = (a: BoardCell["chip"], b: BoardCell["chip"]) =>
+    !!a !== !!b || (a !== null && b !== null && a!.color !== b!.color);
+  createEffect(
+    on(
+      () => s().board,
+      (board, prev) => {
+        if (!prev) return;
+        let changed = -1;
+        for (let i = 0; i < board.length; i++) {
+          if (chipChanged(board[i].chip, prev[i].chip)) {
+            if (changed >= 0) return; // more than one cell changed: not a move
+            changed = i;
+          }
+        }
+        if (changed < 0) return;
+        setLastMoveFlash(changed);
+        clearTimeout(lastMoveTimer);
+        lastMoveTimer = setTimeout(() => setLastMoveFlash(null), 900);
+      },
+      { defer: true },
+    ),
+  );
 
   // Note: the mandatory draw step is advanced host-side automatically, so no
   // client-side auto-draw is needed here.
@@ -309,7 +348,8 @@ export default function SequenceGame(props: {
               cell={cell}
               index={i()}
               legal={highlightCells().has(i())}
-              flash={flash().has(i())}
+              sequenceFlash={sequenceFlash().has(i())}
+              lastMoveFlash={lastMoveFlash() === i()}
               interactive={myTurn() && highlightCells().has(i())}
               onCellClick={cellClick}
             />
