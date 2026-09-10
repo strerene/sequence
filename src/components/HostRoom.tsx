@@ -1,4 +1,5 @@
 import type { DataConnection, Peer } from "peerjs";
+import { useNavigate } from "@solidjs/router";
 import {
   batch,
   createEffect,
@@ -9,6 +10,7 @@ import {
   Show,
 } from "solid-js";
 import SequenceGame from "~/components/SequenceGame";
+import GameResultDialog from "~/components/GameResultDialog";
 import TeamAvatar from "~/components/ui/TeamAvatar";
 import {
   SEQUENCE_SEATS,
@@ -21,10 +23,12 @@ import {
   type SequenceState,
   type SerializedSecrets,
 } from "~/lib/sequence";
+import { leaveRoom } from "~/lib/p2p";
 
 const gameKey = (roomId: string) => `game:${roomId}`;
 
 export default function HostRoom(props: { roomId: string; peer: Peer }) {
+  const navigate = useNavigate();
   const [conns, setConns] = createSignal<DataConnection[]>([]);
   const [copied, setCopied] = createSignal(false);
   const [copiedLink, setCopiedLink] = createSignal(false);
@@ -191,6 +195,14 @@ export default function HostRoom(props: { roomId: string; peer: Peer }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Leave wipes this tab's room session (role, ids, game snapshot) before
+  // navigating home; onCleanup destroys the peer as the component unmounts.
+  const leave = () => {
+    sessionStorage.removeItem(gameKey(props.roomId));
+    leaveRoom(props.roomId);
+    navigate("/");
+  };
+
   // Build the invite link from the current URL so a BASE_PATH deployment
   // (e.g. GitHub Pages) is handled automatically.
   const copyRoomLink = async () => {
@@ -230,11 +242,12 @@ export default function HostRoom(props: { roomId: string; peer: Peer }) {
               applyAction("blue", { type, payload })
             }
           />
-          <Show when={gameState().status}>
-            <button class="btn btn-primary" onClick={startGame} type="button">
-              Rematch
-            </button>
-          </Show>
+          <GameResultDialog
+            state={gameState()}
+            isHost
+            onRematch={startGame}
+            onLeave={leave}
+          />
         </div>
       }
     >

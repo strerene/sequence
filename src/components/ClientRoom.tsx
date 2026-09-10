@@ -1,6 +1,8 @@
 import type { DataConnection } from "peerjs";
+import { useNavigate } from "@solidjs/router";
 import { batch, createSignal, onCleanup, onMount, Show } from "solid-js";
 import SequenceGame from "~/components/SequenceGame";
+import GameResultDialog from "~/components/GameResultDialog";
 import TeamAvatar from "~/components/ui/TeamAvatar";
 import {
   createInitialState,
@@ -9,12 +11,13 @@ import {
   type HostMessage,
   type SequenceState,
 } from "~/lib/sequence";
-import { joinRoom } from "~/lib/p2p";
+import { joinRoom, leaveRoom } from "~/lib/p2p";
 
 const MAX_RETRIES = 5;
 const RETRY_DELAY_MS = 2000;
 
 export default function ClientRoom(props: { roomId: string }) {
+  const navigate = useNavigate();
   const [status, setStatus] = createSignal<
     "connecting" | "connected" | "disconnected"
   >("connecting");
@@ -91,6 +94,13 @@ export default function ClientRoom(props: { roomId: string }) {
     connection?.send({ type: "action", action: { type, payload } } satisfies ClientMessage);
   };
 
+  // Leave wipes this tab's room session before navigating home; onCleanup
+  // closes the data connection as the component unmounts.
+  const leave = () => {
+    leaveRoom(props.roomId);
+    navigate("/");
+  };
+
   // Two-phase layout mirrors HostRoom: a lobby card while waiting for the
   // host to start, then the game card. Connection status surfaces inside the
   // lobby card since the client has nothing else to show before the game.
@@ -122,6 +132,7 @@ export default function ClientRoom(props: { roomId: string }) {
             hand={hand()}
             onPropose={propose}
           />
+          <GameResultDialog state={gameState()} isHost={false} onLeave={leave} />
         </div>
       }
     >

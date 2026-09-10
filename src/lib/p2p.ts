@@ -60,6 +60,18 @@ export function getRoom(): RoomHandle | null {
   return room;
 }
 
+/**
+ * Forget the current room entirely (role, room id, host peer id) and drop the
+ * module singleton, so leaving a room is a clean slate: the next "create
+ * room" gets a fresh peer instead of a destroyed one.
+ */
+export function leaveRoom(roomId: string): void {
+  sessionStorage.removeItem(SESSION_ROLE_KEY);
+  sessionStorage.removeItem(SESSION_ROOM_KEY);
+  sessionStorage.removeItem(hostIdKey(roomId));
+  room = null;
+}
+
 // True if this tab was hosting the given room before a reload.
 // sessionStorage survives reloads (but not new tabs), which is exactly
 // the scope we want for "same tab, same room".
