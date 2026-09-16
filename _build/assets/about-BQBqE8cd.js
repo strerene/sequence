@@ -1,0 +1,1 @@
+import{c as e,h as t,n,s as r,u as i,w as a}from"./dist-BO1JbmCw.js";var o=t(`<main><!$><!/><h1>About`);function s(){return(()=>{var t=r(o),s=t.firstChild,[c,l]=e(s.nextSibling);return c.nextSibling,i(t,a(n,{children:`About`}),c,l),t})()}export{s as default};
