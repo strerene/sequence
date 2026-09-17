@@ -22,7 +22,7 @@
     ]
   },
   "src/entry-client.tsx": {
-    "file": "_build/assets/entry-client-D5IFlQbC.js",
+    "file": "_build/assets/entry-client-DIIOXaf4.js",
     "name": "entry-client",
     "src": "src/entry-client.tsx",
     "isEntry": true,
@@ -38,7 +38,7 @@
       "src/routes/room/index.tsx?pick=default&pick=$css&lang.tsx"
     ],
     "css": [
-      "_build/assets/entry-client-DBl09dLp.css"
+      "_build/assets/entry-client-FXHOUlKy.css"
     ]
   },
   "src/routes/[...404].tsx?pick=default&pick=$css&lang.tsx": {
@@ -72,7 +72,7 @@
     ]
   },
   "src/routes/room/index.tsx?pick=default&pick=$css&lang.tsx": {
-    "file": "_build/assets/index-1JJyTAGx.js",
+    "file": "_build/assets/index-B7cUMPOF.js",
     "name": "index",
     "src": "src/routes/room/index.tsx?pick=default&pick=$css&lang.tsx",
     "isEntry": true,
@@ -82,7 +82,7 @@
       "_routing-DRJueGQ7.js"
     ],
     "css": [
-      "_build/assets/index-DO1UcGuG.css"
+      "_build/assets/index-lcrQRivb.css"
     ]
   }
 }
